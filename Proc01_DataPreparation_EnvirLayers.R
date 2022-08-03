@@ -52,182 +52,6 @@ all <- lapply(all,function(x){
 
 climate <- rast(all) %>% crop(coast,mask=T)
 
-
-# 3.2) Climatic variables -------------------------------------------------
-
-all <- list.files("O:/Tech_AGRO/Jord/Sebastian/BIOLAYERS_CHELSA1985_2021_30M/",
-                  pattern = "tiff$|tif$",
-                  full.names = TRUE
-)
-
-all <- lapply(all[7:39],function(x){
-  stack(x)
-})
-
-
-
-
-beginCluster(detectCores()-5)
-biostack <- all[[1]][[1]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[1]]
-  biostack <- stack(biostack,temp)
-  bio1 <- clusterR(biostack,
-                  calc, 
-                  args=list(fun=mean)
-                  )
-}
-endCluster()
-Sys.time()-start
-
-
-biostack <- all[[1]][[2]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[2]]
-  biostack <- c(biostack,temp)
-  bio2 <- app(biostack,fun="mean",cores=10)
-}
-
-biostack <- all[[1]][[3]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[3]]
-  biostack <- c(biostack,temp)
-  bio3 <- app(biostack,fun="mean",cores=10)
-}
-
-biostack <- all[[1]][[4]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[4]]
-  biostack <- c(biostack,temp)
-  bio4 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[5]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[5]]
-  biostack <- c(biostack,temp)
-  bio5 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[6]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[6]]
-  biostack <- c(biostack,temp)
-  bio6 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[7]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[7]]
-  biostack <- c(biostack,temp)
-  bio7 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[8]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[8]]
-  biostack <- c(biostack,temp)
-  bio8 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[9]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[9]]
-  biostack <- c(biostack,temp)
-  bio9 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[10]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[10]]
-  biostack <- c(biostack,temp)
-  bio10 <- app(biostack,fun="mean",cores=10)
-}
-
-
-
-biostack <- all[[1]][[11]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[11]]
-  biostack <- c(biostack,temp)
-  bio11 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[12]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[12]]
-  biostack <- c(biostack,temp)
-  bio12 <- app(biostack,fun="mean",cores=10)
-}
-
-
-
-biostack <- all[[1]][[13]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[13]]
-  biostack <- c(biostack,temp)
-  bio13 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[14]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[14]]
-  biostack <- c(biostack,temp)
-  bio14 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[15]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[15]]
-  biostack <- c(biostack,temp)
-  bio15 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[16]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[16]]
-  biostack <- c(biostack,temp)
-  bio16 <- app(biostack,fun="mean",cores=10)
-}
-
-
-
-biostack <- all[[1]][[17]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[17]]
-  biostack <- c(biostack,temp)
-  bio17 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[18]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[18]]
-  biostack <- c(biostack,temp)
-  bio18 <- app(biostack,fun="mean",cores=10)
-}
-
-
-biostack <- all[[1]][[19]]
-for (i in 2:length(all)) {
-  temp <- all[[i]][[19]]
-  biostack <- c(biostack,temp)
-  bio19 <- app(biostack,fun="mean",cores=10)
-}
-
-climate <- rast(all) %>% crop(coast,mask=T)
-
-
 # 3.3) Geomorphology layers -----------------------------------------------
 
 all <- list.files("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Geomorphology/",
@@ -255,6 +79,10 @@ all <- lapply(all,function(x){
 
 geology <- rast(all) %>% crop(coast,mask=T)
 
+geology_dummy <- segregate(geology[[1]]) 
+names(geology_dummy) <- paste0("geology",1:11)
+georeg_dummy <- segregate(geology[[2]])
+names(georeg_dummy) <- paste0("georeg",c(1,2,3,4,6,8,10))
 
 # 3.5) Soil layers --------------------------------------------------------
 
@@ -272,11 +100,12 @@ all <- lapply(all,function(x){
 
 soil <- rast(all) %>% crop(coast,mask=T)
 
+
 # 3.6) Organimsms layers --------------------------------------------------
 
 # 3.6.1) Existing covariates ----------------------------------------------
 
-all <- list.files("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Organisms/",
+all <- list.files("O:/Tech_AGRO/Jord/Sebastian/Multiannual1986_2019/Multiannual86_19/",
                   pattern = "tiff$|tif$",
                   full.names = TRUE
 )
@@ -285,17 +114,19 @@ all <- lapply(all,function(x){
   rast(x)
 })
 
-organisms <- rast(all) %>% crop(coast,mask=T)
-
+organisms <- rast(all) %>% resample(geology,method="bilinear") %>% crop(coast,mask=T)
+organisms <- c(organisms)
 
 # 3.6.2) New covariates ---------------------------------------------------
 
-# Remote sensing data --> Landsat 7
+# Remote sensing data --> Landsat 5/7
 
 #Function to calculate spectral indices
 
-indicesL7 <- function(bandstack){
+indicesL57 <- function(bandstack){
   ndvi <- (bandstack[[4]]-bandstack[[3]])/(bandstack[[4]]+bandstack[[3]])
+  
+  kndvi <- tanh(((bandstack[[4]]-bandstack[[3]])/(bandstack[[4]]+bandstack[[3]]))^2)
   
   evi <- ((bandstack[[4]]-bandstack[[3]])/(bandstack[[4]] + 6*bandstack[[3]] - 7.5*bandstack[[1]] + 1))*2.5
   
@@ -313,32 +144,22 @@ indicesL7 <- function(bandstack){
   
   wetness <- bandstack[[1]]*0.0315 + bandstack[[2]]*0.2021 + bandstack[[3]]*0.3102 + 
     bandstack[[4]]*0.1594 + bandstack[[5]]*0.6806 + bandstack[[6]]*(-0.6109)
-  indices <- c(ndvi,evi,savi,bsi,str,brightness,greenness,wetness)
+  
+  msavi <- (2*bandstack[[4]] + 1- sqrt((2*bandstack[[4]] + 1)^2 - 8 * (bandstack[[4]] - bandstack[[3]])))/2
+  
+  indices <- c(ndvi,kndvi,evi,savi,msavi,bsi,str,brightness,greenness,wetness)
+  
   return(indices)
 }
 
-# Load images
-l7med <- rast("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Organisms/Landsat7Bands/L7Med86_19.tif") %>% 
-  crop(coast,mask=T)
-l7p10 <- rast("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Organisms/Landsat7Bands/L7P1086_19.tif") %>% 
-  crop(coast,mask=T)
-l7p90 <- rast("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Organisms/Landsat7Bands/L7P9086_19.tif") %>% 
-  crop(coast,mask=T)
+# Indices
 
+indmed <- app(organisms[[1:6]], fun=indicesL57, cores =15)
+indp10 <- app(organisms[[7:12]], fun=indicesL57, cores =15)
+indp90 <- app(organisms[[13:18]], fun=indicesL57, cores =15)
 
-start <- Sys.time()
-l7medInd <- app(l7med,   fun=indicesL7, cores =16)  %>% 
-  resample(organisms)
-names(l7medInd) <- c("NDVIMed","EVIMed","SAVIMed","BSIMed","STRMed","BRIGHTMed","GREENMed","WETMed")
-l7p10Ind <- app(l7p10,   fun=indicesL7, cores =16)  %>% 
-  resample(organisms)
-names(l7p10Ind) <- c("NDVIP10","EVIP10","SAVIP10","BSIP10","STRP10","BRIGHTP10","GREENP10","WETP10") 
-l7p90Ind <- app(l7p90,   fun=indicesL7, cores =16)  %>% 
-  resample(organisms)
-names(l7p90Ind) <- c("NDVIP90","EVIP90","SAVIP90","BSIP90","STRP90","BRIGHTP90","GREENP90","WETP90")
-Sys.time()-start
-
-organisms <- c(organisms,l7medInd,l7p10Ind,l7p90Ind)
+organisms <- c(indmed,indp10,indp90)
+names(organisms)
 
 # Land use time series 1990/2005-2019
 
@@ -543,8 +364,15 @@ DivIndex <- app(Index, fun="sum",na.rm=T)
 DivIndex[DivIndex>1] <- NA
 DivIndex <- round(DivIndex,1)
 
-organisms <- c(organisms,DivIndex,LU12,LU13,LU14,LU15,LU16,LU17)
 
+
+organisms <- c(organisms,DivIndex,LU12,LU13,LU14,LU15,LU16,LU17)
+gl(3,10,labels=c("Med","P10","P90"))
+ind <- as.factor(rep(seq(1:10),3))
+levels(ind) <- c("ndvi","kndvi","evi","savi","msavi","bsi","str","brightness","greenness","wetness") %>% toupper()
+
+names(organisms) <- c(paste0(ind,gl(3,10,labels=c("Med","P10","P90"))),"DivIndLU","YearsPermWetland",
+                           "YearsWoodland","YearsTreeCrop","YearsCropland","YearsGrassland","YearsPerdWetland")
 
 # covs <- rast("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Cov8619.tif")
 # names(covs) <- readRDS("C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/NamesCov8619.rds")
@@ -571,23 +399,14 @@ y <- y %>% crop(coast,mask=T) %>% resample(organisms[[1]])
 names(y) <- "CoordY"
 
 # 3.8) Whole set of environmental layers set ------------------------------
-rm(cov)
-covs <- c(x,y,organisms,soil,geology,geomorphology,climate)
+rm(covs)
+covs <- c(x,y,organisms,soil,geology_dummy,georeg_dummy,geomorphology,climate)
 names(covs)
 
 # 4) Exporting environmental layers ---------------------------------------
-writeRaster(cov,"C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Cov8619.tif",overwrite=T)
-names(cov)
-saveRDS(names(cov),"C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/NamesCov8619.rds")
-
-
-
-
-
-
-
-
-
+writeRaster(covs,"C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/Cov8619.tif",overwrite=T)
+names(covs)
+saveRDS(names(covs),"C:/Users/au704633/OneDrive - Aarhus Universitet/Documents/AARHUS_PhD/DSMactivities/MonitoringGridData/SOCModeling/EnvironmLayers_30m/NamesCov8619.rds")
 
 
 
